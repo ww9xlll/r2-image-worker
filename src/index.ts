@@ -30,12 +30,21 @@ app.get('/', async (c) => {
 <head>
     <meta charset="UTF-8">
     <title>ww93's image worker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             text-align: center;
             font-family: "PT Mono";
             font-style: italic;
             margin-top: 10px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
         }
 
         .image-url-container {
@@ -64,9 +73,9 @@ app.get('/', async (c) => {
         }
     </style>
 </head>
-<h1 style="font-weight: lighter;">ww93's image worker</h1>
 
 <body>
+    <h1 style="font-weight: lighter;">ww93's image worker</h1>
     Paste your image here.
     <p id="uploading"></p>
 </body>
