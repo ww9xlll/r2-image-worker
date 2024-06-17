@@ -48,15 +48,8 @@ app.put('/upload', async (c) => {
   return c.text(key)
 })
 
-app.get(
-  '*',
-  cache({
-    cacheName: 'r2-image-worker'
-  })
-)
-
-app.get('/:key', async (c) => {
-  const key = c.req.param('key')
+app.get('*', async (c) => {
+  const key = c.req.path;
 
   const object = await c.env.BUCKET.get(key)
   if (!object) return c.notFound()
