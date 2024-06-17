@@ -18,3 +18,24 @@ export const detectType = (b64: string): Type | undefined => {
     }
   }
 }
+
+export const formatCurrentDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  return `${year}/${month}/`;
+}
+
+export function getImageInfo(b64: string) {
+  const base64Parts = b64.split(',');
+  const format = base64Parts[0].split(';')[0].split(':')[1];
+  const data = base64Parts[1];
+  return { format, data };
+}
+
+export const removeLeadingSlash = (str: string): string => {
+  if (str.startsWith('/')) {
+    return str.substring(1);
+  }
+  return str;
+}
