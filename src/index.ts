@@ -105,7 +105,7 @@ app.get('/', async (c) => {
                     $('#image-url').text(imageUrl)
                     $('#image-url').attr('href', imageUrl)
                     $('#image').attr('src', imageUrl)
-                    $('#image-container').css('display', 'block')
+                    $('.image-container').css('display', 'block')
                     $("#uploading").text("")
                 },
                 error: function (data) {
