@@ -20,11 +20,11 @@
             background-color: #f4f4f4;
         }
 
-        .image-url-container {
-            display: flex;
+        .image-container {
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
+            display: none;
         }
 
         .image-url {
@@ -51,6 +51,13 @@
     <h1 style="font-weight: lighter;">ww93's image worker</h1>
     Paste your image here.
     <p id="uploading"></p>
+    <div class="image-container">
+        <br>
+        <a class="image-url" id="image-url" target="_blank" href=""></a>
+        <button class="copy-button" onclick="copyImageUrl()">Copy</button>
+        <br>
+        <img id="image" style="max-width:500px" src="" />
+    </div>
 </body>
 <footer></footer>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -67,9 +74,11 @@
                 type: 'PUT',
                 data: JSON.stringify({ name: blob.name, body: event.target.result }),
                 success: function (data) {
-                    const image_url = 'https://${c.req.header("host")}/' + data
-                    document.body.innerHTML += '<div class="image-url-container"><br><a class="image-url" id="imageUrl" target="_blank" href="' + image_url + '">' + image_url + '</a><button class="copy-button" onclick="copyImageUrl()">Copy</button></div>'
-                    document.body.innerHTML += '<hr><img style="max-width:500px" src="' + image_url + '" />'
+                    const imageUrl = 'https://${c.req.header("host")}/' + data
+                    $('#image-url').text(imageUrl)
+                    $('#image-url').attr('href', imageUrl)
+                    $('#image').attr('src', imageUrl)
+                    $('#image-container').css('display', 'block')
                     $("#uploading").text("")
                 },
                 error: function (data) {
@@ -78,11 +87,10 @@
             })
 
         }
-
         reader.readAsDataURL(blob);
     }
     function copyImageUrl() {
-        const imageUrl = document.getElementById('imageUrl').innerText;
+        const imageUrl = document.getElementById('image-url').innerText;
         // 创建一个临时的 textarea 元素来存储 URL 并执行复制操作
         const textarea = document.createElement('textarea');
         textarea.value = imageUrl;
