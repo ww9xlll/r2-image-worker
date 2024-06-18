@@ -22,7 +22,8 @@ export const detectType = (b64: string): Type | undefined => {
 export const formatCurrentDate = (today: Date): string => {
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0');
-  return `${year}/${month}/`;
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}/`;
 }
 
 export const formatFileName = (fileName: string, now: Date): string => {
