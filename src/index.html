@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>ww93's image worker</title>
+    <title>image worker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -48,7 +48,7 @@
 </head>
 
 <body>
-    <h1 style="font-weight: lighter;">ww93's image worker</h1>
+    <h1 style="font-weight: lighter;">image worker</h1>
     Paste your image here.
     <p id="uploading"></p>
     <div class="image-container">
@@ -74,7 +74,7 @@
                 type: 'PUT',
                 data: JSON.stringify({ name: blob.name, body: event.target.result }),
                 success: function (data) {
-                    const imageUrl = 'https://${c.req.header("host")}/' + data
+                    const imageUrl = '${c.req.url}' + data
                     $('#image-url').text(imageUrl)
                     $('#image-url').attr('href', imageUrl)
                     $('#image').attr('src', imageUrl)

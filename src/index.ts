@@ -29,7 +29,7 @@ app.get('/', async (c) => {
 
 <head>
     <meta charset="UTF-8">
-    <title>ww93's image worker</title>
+    <title>image worker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -75,7 +75,7 @@ app.get('/', async (c) => {
 </head>
 
 <body>
-    <h1 style="font-weight: lighter;">ww93's image worker</h1>
+    <h1 style="font-weight: lighter;">image worker</h1>
     Paste your image here.
     <p id="uploading"></p>
     <div class="image-container">
@@ -101,7 +101,7 @@ app.get('/', async (c) => {
                 type: 'PUT',
                 data: JSON.stringify({ name: blob.name, body: event.target.result }),
                 success: function (data) {
-                    const imageUrl = 'https://${c.req.header("host")}/' + data
+                    const imageUrl = '${c.req.url}' + data
                     $('#image-url').text(imageUrl)
                     $('#image-url').attr('href', imageUrl)
                     $('#image').attr('src', imageUrl)
@@ -161,6 +161,7 @@ app.put('/upload', async (c) => {
 })
 
 app.get('**', async (c) => {
+  // 可以在这里判断 user agent，比如是否包含 Obsidian 从而限制访问
   const key = removeLeadingSlash(c.req.path);
   const object = await c.env.BUCKET.get(key)
   if (!object) return c.body(key, 404)

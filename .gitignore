@@ -7,3 +7,4 @@ yarn.lock
 wrangler.toml
 yarn-error.log
 .wrangler
+.DS_STORE
