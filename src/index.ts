@@ -108,8 +108,8 @@ app.get('/', async (c) => {
                     $('.image-container').css('display', 'block')
                     $("#uploading").text("")
                 },
-                error: function (data) {
-                    $("#uploading").text("Failed: " + data)
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $("#uploading").text(textStatus + ":"+ jqXHR.status + ":" + errorThrown)
                 }
             })
 
