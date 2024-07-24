@@ -3,6 +3,7 @@ import { Context } from 'hono'
 import { sha256 } from 'hono/utils/crypto'
 import { basicAuth } from 'hono/basic-auth'
 import { detectType, formatCurrentDate, formatFileName, getImageInfo, removeLeadingSlash } from './utils'
+import { cors } from 'hono/cors'
 
 type Bindings = {
   BUCKET: R2Bucket
@@ -24,6 +25,16 @@ const app = new Hono<{ Bindings: Bindings }>()
 app.get('/favicon.ico', async (c) => {
   return c.notFound()
 })
+
+// 应用 CORS 中间件
+app.use('*', cors({
+  origin: ['app://obsidian.md'],
+  allowMethods: ['POST', 'GET', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+  exposeHeaders: ['Content-Length'],
+  maxAge: 600,
+  credentials: true,
+}))
 
 app.get('/', async (c) => {
   return c.html(`<html>
