@@ -1,4 +1,5 @@
 import { Hono } from 'hono/quick'
+import { Context } from 'hono'
 import { sha256 } from 'hono/utils/crypto'
 import { basicAuth } from 'hono/basic-auth'
 import { detectType, formatCurrentDate, formatFileName, getImageInfo, removeLeadingSlash } from './utils'
@@ -158,6 +159,48 @@ app.put('/upload', async (c) => {
   }
   await c.env.BUCKET.put(key, body, { httpMetadata: { contentType: mineType } })
   return c.text(key)
+})
+
+// 模拟的 token 验证函数
+const validateToken = (c: Context, token: string): boolean => {
+  const tokens = c.env.TOKENS as string
+  const tokenArray = tokens.split(',').map((t: string) => t.trim())
+  return tokenArray.includes(token)
+}
+
+// Auth 中间件
+const authMiddleware = async (c: Context, next: () => Promise<void>) => {
+  const authHeader = c.req.header('Authorization')
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return c.json({ error: 'Unauthorized: No token provided' }, 401)
+  }
+
+  const token = authHeader.split(' ')[1]
+
+  if (!validateToken(c, token)) {
+    return c.json({ error: 'Unauthorized: Invalid token' }, 401)
+  }
+
+  await next()
+}
+
+app.post('/upload', authMiddleware, async (c) => {
+  const body = await c.req.parseBody()
+  const file = body['file'] as File
+  if (!file) {
+    return c.json({ error: 'No file uploaded' }, 400)
+  }
+  const type = file.type
+  const today = new Date(new Date().getTime() + 8 * 60 * 60 * 1000)
+  const key = formatCurrentDate(today) + file.name
+  await c.env.BUCKET.put(key, file.stream(), { httpMetadata: { contentType: type } })
+
+  return c.json({
+    name: file.name,
+    size: file.size,
+    url: `https://image.ww93.fun/${key}`,
+  })
 })
 
 app.get('**', async (c) => {
